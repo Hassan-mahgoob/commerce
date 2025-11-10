@@ -10,28 +10,32 @@ export const getAllProducts = async () => {
 };
 
 export const seedInitialProducts = async () => {
-  const products = [
-    {
-      title: "Product 1",
-      price: 100,
-      image: "https://via.placeholder.com/150",
-      stock: 10,
-    },
-    {
-      title: "Product 2",
-      price: 200,
-      image: "https://via.placeholder.com/150",
-      stock: 20,
-    },
-    {
-      title: "Product 3",
-      price: 300,
-      image: "https://via.placeholder.com/150",
-      stock: 30,
-    },
-  ];
-  const existingProducts = await getAllProducts();
-  if (existingProducts?.length === 0) {
-    await productModel.insertMany(products);
+  try {
+    const products = [
+      {
+        title: "Product 1",
+        price: 100,
+        image: "https://via.placeholder.com/150",
+        stock: 10,
+      },
+      {
+        title: "Product 2",
+        price: 200,
+        image: "https://via.placeholder.com/150",
+        stock: 20,
+      },
+      {
+        title: "Product 3",
+        price: 300,
+        image: "https://via.placeholder.com/150",
+        stock: 30,
+      },
+    ];
+    const existingProducts = await getAllProducts();
+    if (existingProducts?.length === 0) {
+      await productModel.insertMany(products);
+    }
+  } catch (err) {
+    console.error("Failed to seed products", err);
   }
 };

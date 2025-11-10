@@ -4,12 +4,14 @@ import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import { seedInitialProducts } from "./services/productService.js";
 import cartRoute from "./routes/cartRoute.js";
+import dotenv from "dotenv";
 const app = express();
 const port = 3001;
 app.use(express.json());
+dotenv.config();
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/commerce")
+  .connect(process.env.DATABASE_URL || "")
   .then(() => {
     console.log("Connected to MongoDB");
   })
