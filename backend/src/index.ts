@@ -5,9 +5,12 @@ import productRoute from "./routes/productRoute.js";
 import { seedInitialProducts } from "./services/productService.js";
 import cartRoute from "./routes/cartRoute.js";
 import dotenv from "dotenv";
+import cors from "cors";
+
 const app = express();
 const port = 3001;
 app.use(express.json());
+app.use(cors());
 dotenv.config();
 
 mongoose
