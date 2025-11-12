@@ -15,7 +15,18 @@ import { useNavigate } from "react-router-dom";
 import { Button, Grid } from "@mui/material";
 
 function Navbar() {
-  const { username, isAuthenticated } = useAuth();
+  const auth = useAuth();
+  const { username, isAuthenticated, logout } = auth || {
+    username: null,
+    isAuthenticated: false,
+    logout: () => {},
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+    
+  };
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -94,7 +105,7 @@ function Navbar() {
                       <Grid size={3}>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                           <Avatar
-                            alt={username}
+                            alt={username || "User"}
                             src="/static/images/avatar/2.jpg"
                           />
                         </IconButton>
@@ -123,7 +134,10 @@ function Navbar() {
                       </Typography>
                     </MenuItem>
                     <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography sx={{ textAlign: "center" }}>
+                      <Typography
+                        sx={{ textAlign: "center" }}
+                        onClick={handleLogout}
+                      >
                         Logout
                       </Typography>
                     </MenuItem>
