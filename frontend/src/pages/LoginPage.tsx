@@ -3,36 +3,32 @@ import { useRef, useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
 import { useAuth } from "../Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-const RegisterPage = () => {
+const LoginPage = () => {
   const [error, setError] = useState("");
-  const firstNameRef = useRef<HTMLInputElement>(null);
-  const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const { login } = useAuth();
   const handleSubmit = async () => {
-    const firstName = firstNameRef.current?.value;
-    const lastName = lastNameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
-    console.log(firstName, lastName, email, password);
+    console.log(email, password);
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!email || !password) {
       setError("All fields are required");
       return;
     }
     // Make the call to API to create the user
-    const response = await fetch(`${BASE_URL}/user/register`, {
+    const response = await fetch(`${BASE_URL}/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ firstName, lastName, email, password }),
+      body: JSON.stringify({ email, password }),
     });
     if (!response.ok) {
-      setError("Unable to register user, Please try different credentials");
+      setError("Unable to login user, Please try different credentials");
 
       return;
     }
@@ -46,8 +42,6 @@ const RegisterPage = () => {
     navigate("/");
     console.log(token);
 
-    firstNameRef.current!.value = "";
-    lastNameRef.current!.value = "";
     emailRef.current!.value = "";
     passwordRef.current!.value = "";
   };
@@ -63,34 +57,18 @@ const RegisterPage = () => {
           width: "100%",
         }}
       >
-        <Typography variant="h4">Register New Account</Typography>
+        <Typography variant="h4">Login</Typography>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "60%",
+            width: "40%",
             border: "1px solid #ccc",
             borderRadius: "5px",
             p: 2,
             mt: 2,
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField
-              label="first name"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              inputRef={firstNameRef}
-            />
-            <TextField
-              label="last name"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              inputRef={lastNameRef}
-            />
-          </Box>
           <TextField
             label="email"
             variant="outlined"
@@ -103,9 +81,19 @@ const RegisterPage = () => {
             variant="outlined"
             fullWidth
             margin="normal"
-            type="password"
             inputRef={passwordRef}
           />
+
+          {error && (
+            <Typography
+              sx={{ mt: 2, alignItems: "center" }}
+              variant="body1"
+              color="error"
+            >
+              {error}
+            </Typography>
+          )}
+
           {error && (
             <Typography
               sx={{ mt: 2, alignItems: "center" }}
@@ -127,7 +115,7 @@ const RegisterPage = () => {
             }}
             fullWidth
           >
-            Register
+            Login
           </Button>
         </Box>
       </Box>
@@ -135,4 +123,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;
