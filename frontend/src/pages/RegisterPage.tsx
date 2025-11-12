@@ -1,19 +1,26 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
+import { useAuth } from "../Auth/AuthContext";
 const RegisterPage = () => {
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const { login } = useAuth();
   const handleSubmit = async () => {
     const firstName = firstNameRef.current?.value;
     const lastName = lastNameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
     console.log(firstName, lastName, email, password);
+
+    if (!firstName || !lastName || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
     // Make the call to API to create the user
     const response = await fetch(`${BASE_URL}/user/register`, {
       method: "POST",
@@ -27,9 +34,15 @@ const RegisterPage = () => {
 
       return;
     }
-    const data = await response.json();
-    console.log(data);
-    setSuccess("User registered successfully");
+
+    const token = await response.json();
+    if (!token) {
+      setError("Incorrect token");
+      return;
+    }
+    login(email, token);
+    console.log(token);
+
     firstNameRef.current!.value = "";
     lastNameRef.current!.value = "";
     emailRef.current!.value = "";
@@ -90,7 +103,7 @@ const RegisterPage = () => {
             type="password"
             inputRef={passwordRef}
           />
-          {error &&  (
+          {error && (
             <Typography
               sx={{ mt: 2, alignItems: "center" }}
               variant="body1"
@@ -99,15 +112,7 @@ const RegisterPage = () => {
               {error}
             </Typography>
           )}
-          {success && (
-            <Typography
-              sx={{ mt: 2, alignItems: "center" }}
-              variant="body1"
-              color="success"
-            >
-              {success}
-            </Typography>
-          )}
+
           <Button
             onClick={handleSubmit}
             variant="contained"
