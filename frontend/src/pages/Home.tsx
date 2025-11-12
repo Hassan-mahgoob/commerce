@@ -10,7 +10,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${BASE_URL}product`);
+        const response = await fetch(`${BASE_URL}/product`);
         const data = await response.json();
         setProducts(data);
       } catch {
@@ -32,8 +32,6 @@ const Home = () => {
           fontFamily: "monospace",
           fontSize: "2rem",
           color: "red",
-          
-          
         }}
       >
         Something went wrong

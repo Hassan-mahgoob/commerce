@@ -11,7 +11,7 @@ router.post("/register", async (request, response) => {
       email,
       password,
     });
-    response.status(statusCode).send(data);
+    response.status(statusCode).json(data);
   } catch (error) {
     console.error("Failed to register user", error);
     response.status(500).send("Failed to register user");
@@ -23,10 +23,10 @@ router.post("/login", async (request, response) => {
     const { email, password } = request.body;
 
     const { data, statusCode } = await login({ email, password });
-    response.status(statusCode).send(data);
+    response.status(statusCode).json(data);
   } catch (error) {
     console.error("Failed to login user", error);
-    response.status(500).send("Failed to login user");
+    response.status(500).json("Failed to login user");
   }
 });
 
