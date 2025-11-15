@@ -10,9 +10,10 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { useAuth } from "../Auth/AuthContext";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useAuth } from "../context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Button, Grid } from "@mui/material";
+import { Badge, Button, Grid } from "@mui/material";
 
 function Navbar() {
   const auth = useAuth();
@@ -43,7 +44,7 @@ function Navbar() {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Box
             sx={{
@@ -75,7 +76,19 @@ function Navbar() {
               </Typography>
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <IconButton aria-label="cart" onClick={() => navigate("/cart")}>
+                <Badge badgeContent={4} color="primary">
+                  <ShoppingCartIcon sx={{ color: "white" }} />
+                </Badge>
+              </IconButton>
               {isAuthenticated ? (
                 <>
                   {" "}

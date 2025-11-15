@@ -1,7 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import { BASE_URL } from "../constants/baseUrl";
-import { useAuth } from "../Auth/AuthContext";
+import { useAuth } from "../context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [error, setError] = useState("");
