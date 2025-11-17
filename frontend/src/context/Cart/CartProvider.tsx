@@ -55,13 +55,21 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         setError("Failed to parse cart data");
       }
       const cartIemsMapped = cart.items.map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ({ product, quantity }: { product: any; quantity: number }) => ({
+        ({
+          product,
+          quantity,
+          unitPrice,
+        }: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          product: any;
+          quantity: number;
+          unitPrice: number;
+        }) => ({
           productId: product._id,
           title: product.title,
           image: product.image,
           quantity,
-          unitPrice: product.price,
+          unitPrice,
         })
       );
       setCartItems([...cartIemsMapped]);
