@@ -14,9 +14,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAuth } from "../context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Badge, Button, Grid } from "@mui/material";
+import { useCart } from "../context/Cart/Cartcontext";
 
 function Navbar() {
   const auth = useAuth();
+  const { cartItems } = useCart();
   const { username, isAuthenticated, logout } = auth || {
     username: null,
     isAuthenticated: false,
@@ -26,7 +28,6 @@ function Navbar() {
   const handleLogout = () => {
     logout();
     navigate("/");
-    
   };
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -55,6 +56,7 @@ function Navbar() {
               cursor: "pointer",
             }}
           >
+            
             <Box
               sx={{ display: "flex", alignItems: "center", width: "100%" }}
               onClick={() => navigate("/")}
@@ -85,7 +87,7 @@ function Navbar() {
               }}
             >
               <IconButton aria-label="cart" onClick={() => navigate("/cart")}>
-                <Badge badgeContent={4} color="primary">
+                <Badge badgeContent={cartItems.length} color="primary">
                   <ShoppingCartIcon sx={{ color: "white" }} />
                 </Badge>
               </IconButton>

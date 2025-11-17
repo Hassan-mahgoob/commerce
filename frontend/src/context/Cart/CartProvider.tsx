@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, useState } from "react";
+import { type FC, type PropsWithChildren, useEffect, useState } from "react";
 import { type CartItem } from "../../types/CartItem";
 import { CartContext } from "./Cartcontext";
 import { BASE_URL } from "../../constants/baseUrl";
@@ -9,6 +9,34 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const { token } = useAuth();
+  useEffect(() => {
+    if (!token) {
+      setError("You are not logged in");
+    }
+    const fetchCart = async () => {
+      const response = await fetch(`${BASE_URL}/cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        setError("Failed to fetch cart, please try again later");
+      }
+      const cart = await response.json();
+      const cartIemsMapped = cart.items.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ({ product, quantity }: { product: any; quantity: number }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitPrice: product.price,
+        })
+      );
+      setCartItems([...cartIemsMapped]);
+    };
+    fetchCart();
+  }, [token]);
   const addItemTocart = async (productId: string) => {
     try {
       const response = await fetch(`${BASE_URL}/cart/items`, {
@@ -27,10 +55,8 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         setError("Failed to parse cart data");
       }
       const cartIemsMapped = cart.items.map(
-        (
-          product: { _id: string; title: string; image: string; price: number },
-          quantity: number
-        ) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ({ product, quantity }: { product: any; quantity: number }) => ({
           productId: product._id,
           title: product.title,
           image: product.image,
