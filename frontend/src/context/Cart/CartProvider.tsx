@@ -79,8 +79,98 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const updateItemInCart = async (productId: string, quantity: number) => {
+    try {
+      const response = await fetch(`${BASE_URL}/cart/items`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId, quantity }),
+      });
+      if (!response.ok) {
+        setError("Failed to update item in cart");
+      }
+      const cart = await response.json();
+      if (!cart) {
+        setError("Failed to parse cart data");
+      }
+      const cartIemsMapped = cart.items.map(
+        ({
+          product,
+          quantity,
+          unitPrice,
+        }: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          product: any;
+          quantity: number;
+          unitPrice: number;
+        }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitPrice,
+        })
+      );
+      setCartItems([...cartIemsMapped]);
+      setTotalAmount(cart.totalAmount);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const removeItemFromCart = async (productId: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}/cart/items/${productId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        setError("Failed to remove item from cart");
+      }
+      const cart = await response.json();
+      if (!cart) {
+        setError("Failed to parse cart data");
+      }
+      const cartIemsMapped = cart.items.map(
+        ({
+          product,
+          quantity,
+          unitPrice,
+        }: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          product: any;
+          quantity: number;
+          unitPrice: number;
+        }) => ({
+          productId: product._id,
+          title: product.title,
+          image: product.image,
+          quantity,
+          unitPrice,
+        })
+      );
+      setCartItems([...cartIemsMapped]);
+      setTotalAmount(cart.totalAmount);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, totalAmount, addItemTocart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        totalAmount,
+        addItemTocart,
+        updateItemInCart,
+        removeItemFromCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
