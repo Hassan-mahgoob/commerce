@@ -2,7 +2,8 @@ import { Container, Typography, Box, ButtonGroup, Button } from "@mui/material";
 import { useCart } from "../context/Cart/Cartcontext";
 
 const CartPage = () => {
-  const { cartItems, updateItemInCart, removeItemFromCart } = useCart();
+  const { cartItems, updateItemInCart, removeItemFromCart, clearCart } =
+    useCart();
   const handleQuantityChange = (productId: string, quantity: number) => {
     if (quantity == 0) {
       return;
@@ -15,7 +16,9 @@ const CartPage = () => {
 
   return (
     <Container fixed sx={{ mt: 2, width: "50%" }}>
-      <Typography variant="h4">CartPage</Typography>
+      <Typography mb={2} variant="h4">
+        CartPage
+      </Typography>
       {cartItems.map((item) => (
         <Box
           display="flex"
@@ -39,7 +42,9 @@ const CartPage = () => {
               <Typography variant="body1">
                 {item.unitPrice} X {item.quantity} SDG
               </Typography>
-              <Button onClick={() => handleRemoveItemFromCart(item.productId)}>Remove Item</Button>
+              <Button onClick={() => handleRemoveItemFromCart(item.productId)}>
+                Remove Item
+              </Button>
             </Box>
           </Box>
           <ButtonGroup variant="contained" size="small">
@@ -60,21 +65,39 @@ const CartPage = () => {
           </ButtonGroup>
         </Box>
       ))}
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Typography variant="h6">
-          Total Amount:{" "}
-          {cartItems.reduce(
-            (acc, item) => acc + item.unitPrice * item.quantity,
-            0
-          )}{" "}
-          SDG
+      {cartItems.length === 0 ? (
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: 2,
+            color: "red",
+          }}
+          fontWeight={"bold"}
+          variant="h4"
+        >
+          Your cart is empty
         </Typography>
-      </Box>
+      ) : (
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="h6">
+            Total Amount:{" "}
+            {cartItems.reduce(
+              (acc, item) => acc + item.unitPrice * item.quantity,
+              0
+            )}{" "}
+            SDG
+          </Typography>
+          <Button variant="contained" onClick={clearCart}>
+            Clear Cart
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };
