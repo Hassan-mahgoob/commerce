@@ -1,9 +1,15 @@
 import { Container, Typography, Box, ButtonGroup, Button } from "@mui/material";
 import { useCart } from "../context/Cart/Cartcontext";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
-  const { cartItems, updateItemInCart, removeItemFromCart, clearCart } =
-    useCart();
+  const {
+    cartItems,
+    totalAmount,
+    updateItemInCart,
+    removeItemFromCart,
+    clearCart,
+  } = useCart();
   const handleQuantityChange = (productId: string, quantity: number) => {
     if (quantity == 0) {
       return;
@@ -13,6 +19,7 @@ const CartPage = () => {
   const handleRemoveItemFromCart = (productId: string) => {
     removeItemFromCart(productId);
   };
+  const navigate = useNavigate();
 
   return (
     <Container fixed sx={{ mt: 2, width: "50%" }}>
@@ -85,15 +92,16 @@ const CartPage = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="h6">
-            Total Amount:{" "}
-            {cartItems.reduce(
-              (acc, item) => acc + item.unitPrice * item.quantity,
-              0
-            )}{" "}
-            SDG
-          </Typography>
-          <Button variant="contained" onClick={clearCart}>
+          <Typography variant="h6">Total Amount: {totalAmount} SDG</Typography>
+          <Button variant="contained" size="large" onClick={() => navigate("/Checkout")}>
+            Checkout
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={clearCart}
+          >
             Clear Cart
           </Button>
         </Box>
